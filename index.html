@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>H3 Hex Map</title>
+  <title>H3 Hex Grid Demo</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
     html, body, #map {
@@ -15,34 +15,46 @@
 <body>
   <div id="map"></div>
 
+  <!-- Leaflet -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
+  <!-- Inline ES module -->
   <script type="module">
     import * as h3 from "https://cdn.jsdelivr.net/npm/h3-js@4.1.0/+esm";
 
-    const map = L.map('map').setView([40.7128, -74.0060], 10);
+    // Initialize map centered on New York
+    const map = L.map('map').setView([40.7128, -74.0060], 11);
 
+    // Add OSM tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    const resolution = 6;
+    // Generate hex grid
+    const resolution = 5;          // smaller number = larger hexagons
     const center = [40.7128, -74.0060];
-    const h3Index = h3.latLngToCell(center[0], center[1], resolution);
-    const neighbors = h3.gridDisk(h3Index, 2);
+    const centerCell = h3.latLngToCell(center[0], center[1], resolution);
 
-    neighbors.forEach(index => {
-      const boundary = h3.cellToBoundary(index, true);
+    // Make a big cluster (5 hex rings around)
+    const cells = h3.gridDisk(centerCell, 5);
+
+    // Draw polygons
+    cells.forEach(cell => {
+      const boundary = h3.cellToBoundary(cell, true);
       const latlngs = boundary.map(([lat, lng]) => [lat, lng]);
-
+      
       L.polygon(latlngs, {
-        color: 'blue',
-        fillColor: 'skyblue',
+        color: 'darkblue',
+        fillColor: 'deepskyblue',
         fillOpacity: 0.5,
         weight: 1
-      }).addTo(map);
+      })
+      .bindPopup(`H3 index: ${cell}`)
+      .addTo(map);
     });
+
+    console.log(`Rendered ${cells.length} hexagons`);
   </script>
 </body>
 </html>
