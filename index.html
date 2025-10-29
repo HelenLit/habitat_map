@@ -1,17 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>H3 Map Example</title>
+  <meta charset="UTF-8" />
+  <title>H3 Hex Map</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
-    #map { height: 100vh; width: 100vw; }
+    html, body, #map {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
   </style>
 </head>
 <body>
   <div id="map"></div>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/h3-js@3.7.2/dist/h3-js.umd.js"></script>
-  <script src="script.js"></script>
+  <script type="module" src="./script.js"></script>
 </body>
 </html>
